@@ -81,7 +81,9 @@ sub response {  ## no critic (ProhibitExcessComplexity)
     elsif (!exists $self->{id}{ $response->{id} }) {
         return 'unknown {id}';
     }
-    elsif (!(exists $response->{result} xor exists $response->{error})) {
+    # some servers return "error: null", so it's unwise to check via slot
+    # existence
+    elsif (!($response->{result} xor $response->{error})) {
         return 'expect {result} or {error}';
     }
     elsif (exists $response->{error}) {
